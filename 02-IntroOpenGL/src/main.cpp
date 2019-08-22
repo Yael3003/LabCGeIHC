@@ -34,18 +34,28 @@ bool processInput(bool continueApplication = true);
 GLint vertexShaderID, fragmentShaderID, shaderProgramID;
 GLuint VAO, VBO;
 
+typedef struct _Vertex {
+	 float m_Pos[3];
+	 float m_Color[3];
+	
+} Vertex;
+
 // Codigo de los shaders, por ahora se crean en una cadena de texto
 // Shader de vertices
 const GLchar * vertexShaderSource = "#version 330 core\n"
 		"layout (location=0) in vec3 in_position;\n"
+		"layout (location=1) in vec3 in_color;\n"
+		"out vec3 our_color;\n"
 		"void main(){\n"
 		"gl_Position = vec4(in_position, 1.0);\n"
+		"our_color = in_color;\n"
 		"}\0";
 // Shader de fragmento
 const GLchar * fragmentShaderSource = "#version 330 core\n"
-		"out vec4 color;\n"
+	"out vec4 color;\n"
+	"in vec3 our_color;\n"
 		"void main(){\n"
-		"color = vec4(0.9, 0.4, 0.1, 1.0);\n"
+		"color = vec4(our_color, 1.0);\n"
 		"}\0";
 
 // Implementacion de todas las funciones.
@@ -116,11 +126,25 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 		std::cout << "Error al compilar el VERTEX_SHADER." << infoLog << std::endl;
 	}
 
+	//Se crea el id del Fragment Shader
+	fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	// Se agrega el codigo fuente al ID
+	glShaderSource(fragmentShaderID, 1, &fragmentShaderSource, NULL);
+	// Compilacion de Fragment Shader
+	glCompileShader(fragmentShaderID);
+	// Se obtiene el estatus de la compilacion del Fragment shader
+	glGetShaderiv(fragmentShaderID, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		// En caso de error se obtiene el error y lanza mensaje con error
+		glGetShaderInfoLog(fragmentShaderID, 512, NULL, infoLog);
+		std::cout << "Error al compilar el FRAGMENT_SHADER." << infoLog << std::endl;
+	}
+
 	// Programa con los shaders
 	shaderProgramID = glCreateProgram();
 	// Se agregan el vertex y fragment shader al program
 	glAttachShader(shaderProgramID, vertexShaderID);
-	// glAttachShader(shaderProgramID, fragmentShaderID);
+	glAttachShader(shaderProgramID, fragmentShaderID);
 	// Proceso de linkeo
 	glLinkProgram(shaderProgramID);
 	// Revision de error de linkeo del programa
@@ -130,8 +154,38 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 		std::cout << "ERROR al linkear el programa." << infoLog << std::endl;
 	}
 
+	// Se definen los vertices de la geometria a dibujar, cada 3 son un vertice
+	// GLfloat vertices[] = {-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0};
 	// Se definen los vertices de la geometria a dibujar
-	GLfloat vertices[] = {-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0};
+	/*Vertex vertices[] = {
+		    { {-0.5f, -0.5f, 0.0f}, { 1.0f, 0.0f, 0.0f }},
+			{ { 0.5f, -0.5f, 0.0f}, { 0.0f, 1.0f, 0.0f }},
+			{ { 0.5f, 0.5f, 0.0f}, { 0.0f, 0.0f, 1.0f }},
+			{ {-0.5f, -0.5f, 0.0f}, { 1.0f, 0.0f, 0.0f }},
+			{ { 0.5f, 0.5f, 0.0f}, { 0.0f, 0.0f, 1.0f }},
+			{ { -0.5f, 0.5f, 0.0f },{ 1.0f, 0.0f, 1.0f } }
+	    };*/
+
+	Vertex vertices[] = {
+		{ {0.0,0.0,0.0}, { 0.2,0.3,0.5 } },
+		{ {0.2,0.7,0.0}, { 0.5,0.3,0.7 } },
+		{ {0.0,0.7,0.0}, { 0.2,0.4,0.1 } },
+		{ {0.0,0.7,0.0}, { 0.1,0.6,0.45 } },
+		{ {0.2,0.7,0.0}, { 0.5,0.3,0.7 } },
+		{ {0.0,0.85,0.0},{ 0.4,0.1,0.8 } },
+		{ {0.5,0.0,0.0}, {0.2,0.3,0.5 }	},
+		{ {0.5,0.2,0.0}, {0.5,0.3,0.7 } },
+
+
+	};
+	size_t bufferSize = sizeof(vertices);
+	size_t vertexSize = sizeof(vertices[0]);
+	size_t rgbOffset = sizeof(vertices[0].m_Pos);
+   
+	std::cout << "Vertices:" << std::endl;
+	std::cout << "bufferSize:" << bufferSize << std::endl;
+	std::cout << "vertexSize:" << vertexSize << std::endl;
+	std::cout << "rgbOffset:" << rgbOffset << std::endl;
 
 	// Se crea el ID del VAO
 	/*
@@ -139,6 +193,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	Esto es de gran utilidad debido a que solo se configura la estructura una vez
 	y se puede utilizar en el loop de renderizado
 	*/
+	//primer parametro es lacantidad, el segundo el apuntador
 	glGenVertexArrays(1, &VAO);
 	// Cambiamos el estado para indicar que usaremos el id del VAO
 	glBindVertexArray(VAO);
@@ -153,9 +208,13 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 
 	// Se crea un indice para el atributo del vertice posicion, debe corresponder al location del atributo del shader
 	// indice del atributo, Cantidad de datos, Tipo de dato, Normalizacion, Tamanio del bloque (Stride), offset
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GL_FLOAT), (GLvoid*)0);
+	// vertexSize = 6 * sizeof(float) = 24 bytes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)0);
 	// Se habilita el atributo del vertice con indice 0 (posicion)
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, vertexSize, (GLvoid*)rgbOffset);
+	glEnableVertexAttribArray(1);
+
 
 	// Ya que se configuro, se regresa al estado original
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -242,13 +301,13 @@ void applicationLoop() {
 		psi = processInput(true);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		// Esta linea esta comentada debido a que de momento no se usan los shaders
-		// glUseProgram(shaderProgramID);
+		// Esta linea estaba comentada debido a que de momento no se usan los shaders
+		glUseProgram(shaderProgramID);
 
 		// Se indica el buffer de datos y la estructura de estos utilizando solo el id del VAO
 		glBindVertexArray(VAO);
-		// Primitiva de ensamble
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		// Primitiva de ensamble; primitiva, apartir de donde y la cantidad
+		glDrawArrays(GL_TRIANGLES, 0, 10);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
