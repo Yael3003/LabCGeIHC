@@ -9,7 +9,7 @@ uniform mat4 view;
 uniform mat4 model;
 
 void main(){
-
+    //se leen de derecha a izquierda
 	gl_Position = projection * view * model * vec4(in_position, 1.0);
 	our_color = in_color;
 
