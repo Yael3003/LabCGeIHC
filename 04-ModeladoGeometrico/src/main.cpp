@@ -250,7 +250,7 @@ void applicationLoop() {
 		cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l1, glm::vec3(0.1, 0.5, 0.1)));
 
-		//articulacion 2
+		//articulacion 2 (codo)
 		//depende de j1 porque queremos que si se mueve j1 se mueva esta esfera
 		glm::mat4 j2 = glm::translate(j1, glm::vec3(0.5, 0.f, 0.0f));
 		sphere1.enableWireMode();
@@ -262,6 +262,43 @@ void applicationLoop() {
 		cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l2, glm::vec3(0.1, 0.5, 0.1)));
 		shader.turnOff();
+
+		//articulacion 3
+		glm::mat4 j3 = glm::translate(model, glm::vec3(-0.5, 0.f, 0.0f));
+		sphere1.enableWireMode();
+		sphere1.render(glm::scale(j3, glm::vec3(0.1, 0.1, 0.1)));
+
+		//hueso3 
+		glm::mat4 l3 = glm::translate(j3, glm::vec3(-0.25f, 0.0, 0.0));
+		l3 = glm::rotate(l3, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+		cylinder1.enableWireMode();
+		cylinder1.render(glm::scale(l3, glm::vec3(0.1, 0.5, 0.1)));
+		shader.turnOff();
+
+		//articulacion 4
+		//depende de j1 porque queremos que si se mueve j1 se mueva esta esfera
+		glm::mat4 j4 = glm::translate(j3, glm::vec3(-0.5, 0.f, 0.0f));
+		sphere1.enableWireMode();
+		sphere1.render(glm::scale(j4, glm::vec3(0.1, 0.1, 0.1)));
+
+		//hueso4 
+		glm::mat4 l4 = glm::translate(j4, glm::vec3(-0.25f, 0.0, 0.0));
+		l4 = glm::rotate(l4, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+		cylinder1.enableWireMode();
+		cylinder1.render(glm::scale(l4, glm::vec3(0.1, 0.5, 0.1)));
+		shader.turnOff();
+
+		//articulacion 5 (pierna)
+		glm::mat4 j5 = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
+		sphere1.enableWireMode();
+		sphere1.render(glm::scale(j5, glm::vec3(0.1, 0.1, 0.1)));
+
+		//hueso 5 
+		glm::mat4 l5 = glm::translate(j1, glm::vec3(0.25f, 0.0, 0.0));
+		l5 = glm::rotate(l5, glm::radians(90.0f), glm::vec3(0, 0, 1.0));
+		cylinder1.enableWireMode();
+		cylinder1.render(glm::scale(l5, glm::vec3(0.1, 0.5, 0.1)));
+
 
 		//ojo
 		glm::mat4 ojo = glm::translate(model, glm::vec3(0.25f, 0.25, 0.5));
