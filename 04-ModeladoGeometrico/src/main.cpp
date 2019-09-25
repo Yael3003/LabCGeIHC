@@ -37,7 +37,7 @@ Shader shader;
 std::shared_ptr<FirstPersonCamera> camera(new FirstPersonCamera());
 
 Sphere sphere1(20, 20), sphere2(20, 20);
-Cylinder cylinder1(20, 20, 0.5, 0.5);
+Cylinder cylinder1(20, 20, 0.5, 0.5), cylinder2(20, 20, 0.5, 0.5);
 Box box1;
 
 
@@ -125,11 +125,15 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 
 	cylinder1.init();
 	cylinder1.setShader(&shader);
-	cylinder1.setColor(glm::vec4(0.3, 0.3, 1.0, 1.0));
+	cylinder1.setColor(glm::vec4(1.0, 1.0, 0.0, 1.0));
+
+	cylinder2.init();
+	cylinder2.setShader(&shader);
+	cylinder2.setColor(glm::vec4(1.0, 0.0, 0.0, 1.0));
 
 	box1.init();
 	box1.setShader(&shader);
-	box1.setColor(glm::vec4(0.3, 0.3, 1.0, 1.0));
+	box1.setColor(glm::vec4(1.0, 1.0, 0.0, 1.0));
 	camera->setPosition(glm::vec3(2.0, 0.0, 4.0));
 }
 
@@ -235,9 +239,16 @@ void applicationLoop() {
 
 		/*cylinder1.render(model);
 		cylinder1.enableWireMode();*/
+		
 
-		box1.enableWireMode();
+
+		//box1.enableWireMode();
 		box1.render(glm::scale(model, glm::vec3(1.0, 1.0, 0.1)));
+
+		//pantalon
+		glm::mat4 p1 = glm::translate(model, glm::vec3(0.0, -0.375, 0.05f));
+		//cylinder2.enableWireMode();
+		cylinder2.render(glm::scale(p1, glm::vec3(1.0, 0.25, 0.01)));
 
 		//articulacion 
 		glm::mat4 j1 = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
@@ -276,7 +287,7 @@ void applicationLoop() {
 		shader.turnOff();
 
 		//articulacion 4
-		//depende de j1 porque queremos que si se mueve j1 se mueva esta esfera
+		//depende de j3 porque queremos que si se mueve j3 se mueva esta esfera
 		glm::mat4 j4 = glm::translate(j3, glm::vec3(-0.5, 0.f, 0.0f));
 		sphere1.enableWireMode();
 		sphere1.render(glm::scale(j4, glm::vec3(0.1, 0.1, 0.1)));
@@ -288,17 +299,27 @@ void applicationLoop() {
 		cylinder1.render(glm::scale(l4, glm::vec3(0.1, 0.5, 0.1)));
 		shader.turnOff();
 
-		//articulacion 5 (pierna)
-		glm::mat4 j5 = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
+		//articulacion 5 (pierna izq)
+		glm::mat4 j5 = glm::translate(model, glm::vec3(-0.25f, -0.5f, 0.0f));
 		sphere1.enableWireMode();
 		sphere1.render(glm::scale(j5, glm::vec3(0.1, 0.1, 0.1)));
 
 		//hueso 5 
-		glm::mat4 l5 = glm::translate(j1, glm::vec3(0.25f, 0.0, 0.0));
-		l5 = glm::rotate(l5, glm::radians(90.0f), glm::vec3(0, 0, 1.0));
+		glm::mat4 l5 = glm::translate(j5, glm::vec3(0.0f, -0.25, 0.0));
+		l5 = glm::rotate(l5, glm::radians(180.0f), glm::vec3(0, 0, 1.0));
 		cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l5, glm::vec3(0.1, 0.5, 0.1)));
 
+		//articulacion 6 (pierna der)
+		glm::mat4 j6 = glm::translate(model, glm::vec3(0.25f, -0.5f, 0.0f));
+		sphere1.enableWireMode();
+		sphere1.render(glm::scale(j6, glm::vec3(0.1, 0.1, 0.1)));
+
+		//hueso 6
+		glm::mat4 l6 = glm::translate(j6, glm::vec3(0.0f, -0.25, 0.0));
+		l6 = glm::rotate(l6, glm::radians(180.0f), glm::vec3(0, 0, 1.0));
+		cylinder1.enableWireMode();
+		cylinder1.render(glm::scale(l6, glm::vec3(0.1, 0.5, 0.1)));
 
 		//ojo
 		glm::mat4 ojo = glm::translate(model, glm::vec3(0.25f, 0.25, 0.5));
