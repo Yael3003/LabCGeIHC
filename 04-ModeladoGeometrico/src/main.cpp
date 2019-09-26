@@ -36,8 +36,8 @@ GLFWwindow * window;
 Shader shader;
 std::shared_ptr<FirstPersonCamera> camera(new FirstPersonCamera());
 
-Sphere sphere1(20, 20), sphere2(20, 20);
-Cylinder cylinder1(20, 20, 0.5, 0.5);
+Sphere sphere1(20, 20), sphere2(20, 20), sphere3(20, 20), sphere4(20, 20), sphere5(20, 20), sphere6(20, 20);
+Cylinder cylinder1(20, 20, 0.5, 0.5), cylinder2(20, 20, 0.5, 0.5), cylinder3(20, 20, 0.5, 0.5);
 Box box1;
 
 
@@ -114,22 +114,50 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	//metodo setter que coloca el apuntador al shader que vamos a ocupar
 	sphere1.setShader(&shader);
 	//setter para poner el color de la geometria 
-	sphere1.setColor(glm::vec4(0.3, 0.3, 1.0, 1.0));
+	sphere1.setColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
 	//inicializar los buffers VAO, VBO. EBO
 	sphere2.init();
 	//metodo setter que coloca el apuntador al shader que vamos a ocupar
 	sphere2.setShader(&shader);
 	//setter para poner el color de la geometria 
-	sphere2.setColor(glm::vec4(0.3, 1.0, 1.0, 1.0));
+	sphere2.setColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
+
+	//pupilas
+	sphere3.init();
+	sphere3.setShader(&shader);
+	sphere3.setColor(glm::vec4(0.0, 0.0, 0.0, 1.0));
+
+	sphere4.init();
+	sphere4.setShader(&shader);
+	sphere4.setColor(glm::vec4(0.0, 0.0, 0.0, 1.0));
+
+	//iris
+	sphere5.init();
+	sphere5.setShader(&shader);
+	sphere5.setColor(glm::vec4(0.0, 0.0, 1.0, 1.0));
+
+	sphere6.init();
+	sphere6.setShader(&shader);
+	sphere6.setColor(glm::vec4(0.0, 0.0, 1.0, 1.0));
 
 	cylinder1.init();
 	cylinder1.setShader(&shader);
-	cylinder1.setColor(glm::vec4(0.3, 0.3, 1.0, 1.0));
+	cylinder1.setColor(glm::vec4(1.0, 1.0, 0.0, 1.0));
+
+	//pantalon
+	cylinder2.init();
+	cylinder2.setShader(&shader);
+	cylinder2.setColor(glm::vec4(0.75, 0.54, 0.33, 1.0));
+
+	//camisa
+	cylinder3.init();
+	cylinder3.setShader(&shader);
+	cylinder3.setColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
 	box1.init();
 	box1.setShader(&shader);
-	box1.setColor(glm::vec4(0.3, 0.3, 1.0, 1.0));
+	box1.setColor(glm::vec4(1.0, 1.0, 0.0, 1.0));
 	camera->setPosition(glm::vec3(2.0, 0.0, 4.0));
 }
 
@@ -235,9 +263,21 @@ void applicationLoop() {
 
 		/*cylinder1.render(model);
 		cylinder1.enableWireMode();*/
+		
 
-		box1.enableWireMode();
+
+		//box1.enableWireMode();
 		box1.render(glm::scale(model, glm::vec3(1.0, 1.0, 0.1)));
+
+		//pantalon
+		glm::mat4 p1 = glm::translate(model, glm::vec3(0.0, -0.375, 0.05f));
+		//cylinder2.enableWireMode();
+		cylinder2.render(glm::scale(p1, glm::vec3(1.0, 0.25, 0.01)));
+
+		//camisa
+		glm::mat4 c1 = glm::translate(model, glm::vec3(0.0, -0.25, 0.05f));
+		//cylinder2.enableWireMode();
+		cylinder3.render(glm::scale(c1, glm::vec3(1.0, 0.25, 0.01)));
 
 		//articulacion 
 		glm::mat4 j1 = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
@@ -276,7 +316,7 @@ void applicationLoop() {
 		shader.turnOff();
 
 		//articulacion 4
-		//depende de j1 porque queremos que si se mueve j1 se mueva esta esfera
+		//depende de j3 porque queremos que si se mueve j3 se mueva esta esfera
 		glm::mat4 j4 = glm::translate(j3, glm::vec3(-0.5, 0.f, 0.0f));
 		sphere1.enableWireMode();
 		sphere1.render(glm::scale(j4, glm::vec3(0.1, 0.1, 0.1)));
@@ -284,31 +324,67 @@ void applicationLoop() {
 		//hueso4 
 		glm::mat4 l4 = glm::translate(j4, glm::vec3(-0.25f, 0.0, 0.0));
 		l4 = glm::rotate(l4, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-		cylinder1.enableWireMode();
+		//cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l4, glm::vec3(0.1, 0.5, 0.1)));
 		shader.turnOff();
 
-		//articulacion 5 (pierna)
-		glm::mat4 j5 = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
+		//articulacion 5 (pierna izq)
+		glm::mat4 j5 = glm::translate(model, glm::vec3(-0.25f, -0.5f, 0.0f));
 		sphere1.enableWireMode();
 		sphere1.render(glm::scale(j5, glm::vec3(0.1, 0.1, 0.1)));
 
 		//hueso 5 
-		glm::mat4 l5 = glm::translate(j1, glm::vec3(0.25f, 0.0, 0.0));
-		l5 = glm::rotate(l5, glm::radians(90.0f), glm::vec3(0, 0, 1.0));
+		glm::mat4 l5 = glm::translate(j5, glm::vec3(0.0f, -0.25, 0.0));
+		l5 = glm::rotate(l5, glm::radians(180.0f), glm::vec3(0, 0, 1.0));
 		cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l5, glm::vec3(0.1, 0.5, 0.1)));
 
+		//articulacion 6 (pierna der)
+		glm::mat4 j6 = glm::translate(model, glm::vec3(0.25f, -0.5f, 0.0f));
+		sphere1.enableWireMode();
+		sphere1.render(glm::scale(j6, glm::vec3(0.1, 0.1, 0.1)));
+
+		//hueso 6
+		glm::mat4 l6 = glm::translate(j6, glm::vec3(0.0f, -0.25, 0.0));
+		l6 = glm::rotate(l6, glm::radians(180.0f), glm::vec3(0, 0, 1.0));
+		cylinder1.enableWireMode();
+		cylinder1.render(glm::scale(l6, glm::vec3(0.1, 0.5, 0.1)));
 
 		//ojo
-		glm::mat4 ojo = glm::translate(model, glm::vec3(0.25f, 0.25, 0.5));
-		sphere1.enableWireMode();
+		glm::mat4 ojo = glm::translate(model, glm::vec3(0.25f, 0.25, 0.05));
+		//sphere1.enableWireMode();
 		sphere1.render(glm::scale(ojo, glm::vec3(0.2, 0.2, 0.1)));
 
 		//ojo2
-		glm::mat4 ojo2 = glm::translate(model, glm::vec3(-0.25f, 0.25, 0.5));
+		glm::mat4 ojo2 = glm::translate(model, glm::vec3(-0.25f, 0.25, 0.05));
 		//sphere2.enableWireMode();
 		sphere2.render(glm::scale(ojo2, glm::vec3(0.2, 0.2, 0.1)));
+
+		//ojo (pupila)
+		glm::mat4 pupila = glm::translate(ojo, glm::vec3(0.0f, 0.0, 0.055));
+		//sphere1.enableWireMode();
+		sphere3.render(glm::scale(pupila, glm::vec3(0.05, 0.05, 0.01)));
+
+		//ojo2 (pupila)
+		glm::mat4 pupila2 = glm::translate(ojo2, glm::vec3(0.0f, 0.0, 0.055));
+		//sphere2.enableWireMode();
+		sphere4.render(glm::scale(pupila2, glm::vec3(0.05, 0.05, 0.01)));
+
+		//ojo (iris)
+		glm::mat4 iris = glm::translate(ojo, glm::vec3(0.0, 0.0, 0.05));
+		//sphere1.enableWireMode();
+		sphere5.render(glm::scale(iris, glm::vec3(0.1, 0.1, 0.01)));
+
+		//ojo2 (iris)
+		glm::mat4 iris2 = glm::translate(ojo2, glm::vec3(0.0f, 0.0, 0.05));
+		//sphere2.enableWireMode();
+		sphere6.render(glm::scale(iris2, glm::vec3(0.1, 0.1, 0.01)));
+
+		//nariz
+		glm::mat4 nariz = glm::translate(model, glm::vec3(0.0f, 0.15, 0.2));
+		nariz = glm::rotate(nariz, glm::radians(90.0f), glm::vec3(1.0, 0.0f, 0.0));
+		//cylinder1.enableWireMode();
+		cylinder1.render(glm::scale(nariz, glm::vec3(0.1, 0.375, 0.1)));
 
 		glfwSwapBuffers(window);
 	}
