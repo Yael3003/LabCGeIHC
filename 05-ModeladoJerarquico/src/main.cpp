@@ -35,8 +35,8 @@ Shader shader;
 std::shared_ptr<FirstPersonCamera> camera(new FirstPersonCamera());
 
 Sphere sphere1(20, 20);
-Sphere sphere2(20, 20), sphere3(20, 20), sphere4(20, 20), sphere5(20, 20), sphere6(20, 20);
-Cylinder cylinder1(20, 20, 0.5, 0.5), cylinder2(20, 20, 0.5, 0.5), cylinder3(20, 20, 0.5, 0.5);
+Sphere sphere2(20, 20), esferapupi(20, 20), sphere4(20, 20), sphere5(20, 20), sphere6(20, 20);
+Cylinder cylinder1(20, 20, 0.5, 0.5), pantalon(20, 20, 0.5, 0.5), camisa(20, 20, 0.5, 0.5);
 Box box1;
 
 bool exitApp = false;
@@ -127,9 +127,9 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	sphere2.setColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
 	//pupilas
-	sphere3.init();
-	sphere3.setShader(&shader);
-	sphere3.setColor(glm::vec4(0.0, 0.0, 0.0, 1.0));
+	esferapupi.init();
+	esferapupi.setShader(&shader);
+	esferapupi.setColor(glm::vec4(0.0, 0.0, 0.0, 1.0));
 
 	sphere4.init();
 	sphere4.setShader(&shader);
@@ -149,14 +149,14 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	cylinder1.setColor(glm::vec4(1.0, 1.0, 0.0, 1.0));
 
 	//pantalon
-	cylinder2.init();
-	cylinder2.setShader(&shader);
-	cylinder2.setColor(glm::vec4(0.75, 0.54, 0.33, 1.0));
+	pantalon.init();
+	pantalon.setShader(&shader);
+	pantalon.setColor(glm::vec4(0.75, 0.54, 0.33, 1.0));
 
 	//camisa
-	cylinder3.init();
-	cylinder3.setShader(&shader);
-	cylinder3.setColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
+	camisa.init();
+	camisa.setShader(&shader);
+	camisa.setColor(glm::vec4(1.0, 1.0, 1.0, 1.0));
 
 	box1.init();
 	box1.setShader(&shader);
@@ -276,6 +276,7 @@ bool processInput(bool continueApplication){
 
 void applicationLoop() {
 	bool psi = true;
+	glm::mat4 model = glm::mat4(1.0f);
 	while (psi) {
 		psi = processInput(true);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -288,7 +289,7 @@ void applicationLoop() {
 		shader.setMatrix4("projection", 1, false, glm::value_ptr(projection));
 		shader.setMatrix4("view", 1, false, glm::value_ptr(view));
 
-		glm::mat4 model = glm::mat4(1.0f);
+		
 
 		//visualizar con lineas
 		//sphere1.enableWireMode();
@@ -306,13 +307,13 @@ void applicationLoop() {
 
 		//pantalon
 		glm::mat4 p1 = glm::translate(model, glm::vec3(0.0, -0.375, 0.05f));
-		//cylinder2.enableWireMode();
-		cylinder2.render(glm::scale(p1, glm::vec3(1.0, 0.25, 0.01)));
+		//pantalon.enableWireMode();
+		pantalon.render(glm::scale(p1, glm::vec3(1.0, 0.25, 0.01)));
 
 		//camisa
 		glm::mat4 c1 = glm::translate(model, glm::vec3(0.0, -0.25, 0.05f));
-		//cylinder2.enableWireMode();
-		cylinder3.render(glm::scale(c1, glm::vec3(1.0, 0.25, 0.01)));
+		//camisa.enableWireMode();
+		camisa.render(glm::scale(c1, glm::vec3(1.0, 0.25, 0.01)));
 
 		//articulacion 
 		glm::mat4 j1 = glm::translate(model, glm::vec3(0.5f, 0.0f, 0.0f));
@@ -340,8 +341,7 @@ void applicationLoop() {
 		l2 = glm::rotate(l2, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 		cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l2, glm::vec3(0.1, 0.5, 0.1)));
-		shader.turnOff();
-
+		
 		//articulacion 3
 		glm::mat4 j3 = glm::translate(model, glm::vec3(-0.5, 0.f, 0.0f));
 		sphere1.enableWireMode();
@@ -352,7 +352,6 @@ void applicationLoop() {
 		l3 = glm::rotate(l3, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 		cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l3, glm::vec3(0.1, 0.5, 0.1)));
-		shader.turnOff();
 
 		//articulacion 4
 		//depende de j3 porque queremos que si se mueve j3 se mueva esta esfera
@@ -365,7 +364,7 @@ void applicationLoop() {
 		l4 = glm::rotate(l4, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 		//cylinder1.enableWireMode();
 		cylinder1.render(glm::scale(l4, glm::vec3(0.1, 0.5, 0.1)));
-		shader.turnOff();
+		
 
 		//articulacion 5 (pierna izq)
 		glm::mat4 j5 = glm::translate(model, glm::vec3(-0.25f, -0.5f, 0.0f));
@@ -402,11 +401,11 @@ void applicationLoop() {
 		//ojo (pupila)
 		glm::mat4 pupila = glm::translate(ojo, glm::vec3(0.0f, 0.0, 0.055));
 		//sphere1.enableWireMode();
-		sphere3.render(glm::scale(pupila, glm::vec3(0.05, 0.05, 0.01)));
+		esferapupi.render(glm::scale(pupila, glm::vec3(0.05, 0.05, 0.01)));
 
 		//ojo2 (pupila)
 		glm::mat4 pupila2 = glm::translate(ojo2, glm::vec3(0.0f, 0.0, 0.055));
-		//sphere2.enableWireMode();
+		//sphere4.enableWireMode();
 		sphere4.render(glm::scale(pupila2, glm::vec3(0.05, 0.05, 0.01)));
 
 		//ojo (iris)
@@ -416,7 +415,7 @@ void applicationLoop() {
 
 		//ojo2 (iris)
 		glm::mat4 iris2 = glm::translate(ojo2, glm::vec3(0.0f, 0.0, 0.05));
-		//sphere2.enableWireMode();
+		//sphere4.enableWireMode();
 		sphere6.render(glm::scale(iris2, glm::vec3(0.1, 0.1, 0.01)));
 
 		//nariz
