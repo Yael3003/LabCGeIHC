@@ -556,7 +556,7 @@ void applicationLoop() {
 		if (angle > 2 * M_PI)
 			angle = 0.0;
 		else
-			angle += 0.0001;
+			angle += 0.001;
 
 		shader.turnOff();
 
