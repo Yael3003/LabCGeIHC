@@ -70,11 +70,11 @@ Box box1;
 Box box2;
 Box box3;
 Box boxMaterials;
-Box p1, p2, p3, p4, piso1, techo1;
-//Para el sofa
+Box pared1, piso1, techo1;
+//Para los sofas
 Box sofabk, sofac1, sofac2, sofac3, sofac4, sofac5, sofal, sofar;
-//Para mesa
-Box mesa;
+//Para mesa y muebles 
+Box mesa, mueble1Sup, mueble1Inf;
 
 GLuint textureID1, textureID2, textureID3, textureID4;
 // Descomentar
@@ -243,25 +243,10 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	box3.init();
 	box3.setShader(&shaderTextureLighting);
 
-	p1.init();
+	pared1.init();
 	// Settea el shader a utilizar
-	p1.setShader(&shader);
-	p1.setColor(glm::vec4(0.8, 0.9, 0.5, 1.0));
-
-	p2.init();
-	// Settea el shader a utilizar
-	p2.setShader(&shader);
-	p2.setColor(glm::vec4(0.8, 0.9, 0.5, 1.0));
-
-	p3.init();
-	// Settea el shader a utilizar
-	p3.setShader(&shader);
-	p3.setColor(glm::vec4(0.8, 0.9, 0.5, 1.0));
-
-	p4.init();
-	// Settea el shader a utilizar
-	p4.setShader(&shader);
-	p4.setColor(glm::vec4(0.8, 0.9, 0.5, 1.0));
+	pared1.setShader(&shader);
+	pared1.setColor(glm::vec4(0.85, 0.8, 0.4, 1.0));
 
 	piso1.init();
 	// Settea el shader a utilizar
@@ -692,17 +677,17 @@ void applicationLoop() {
 		paredT = glm::rotate(paredT, rot0, glm::vec3(0, 1, 0));
 		// Usamos la textura ID 1
 		//glBindTexture(GL_TEXTURE_2D, textureID1);
-		p1.render(glm::scale(paredT, glm::vec3(20.0, 7.5, 0.2)));
+		pared1.render(glm::scale(paredT, glm::vec3(25.0, 7.5, 0.2)));
 		//Descomentar
 		// No utilizar ninguna textura
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glm::mat4 paredCen = glm::mat4(1.0f);
-		paredCen = glm::translate(paredT, glm::vec3(0, 0, 6));
+		paredCen = glm::translate(paredT, glm::vec3(0, 0, 9));
 		paredCen = glm::rotate(paredCen, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		// Usamos la textura ID 1
 		//glBindTexture(GL_TEXTURE_2D, textureID1);
-		p1.render(glm::scale(paredCen, glm::vec3(12.0, 7.5, 0.3)));
+		pared1.render(glm::scale(paredCen, glm::vec3(6.0, 7.5, 0.3)));
 		//Descomentar
 		// No utilizar ninguna textura
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -712,7 +697,7 @@ void applicationLoop() {
 		paredIzq = glm::rotate(paredIzq, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		// Usamos la textura ID 1
 		//glBindTexture(GL_TEXTURE_2D, textureID1);
-		p1.render(glm::scale(paredIzq, glm::vec3(12.0, 7.5, 0.3)));
+		pared1.render(glm::scale(paredIzq, glm::vec3(12.0, 7.5, 0.3)));
 		//Descomentar
 		// No utilizar ninguna textura
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -722,7 +707,7 @@ void applicationLoop() {
 		paredDer = glm::rotate(paredDer, glm::radians(90.0f), glm::vec3(0, 1, 0));
 		// Usamos la textura ID 1
 		//glBindTexture(GL_TEXTURE_2D, textureID1);
-		p1.render(glm::scale(paredDer, glm::vec3(12.0, 7.5, 0.3)));
+		pared1.render(glm::scale(paredDer, glm::vec3(12.0, 7.5, 0.3)));
 		//Descomentar
 		// No utilizar ninguna textura
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -1076,7 +1061,7 @@ void applicationLoop() {
 		if (angle > 2 * M_PI)
 			angle = 0.0;
 		else
-			angle += 0.001; 
+			angle += 0.001; */
 
 		// Descomentar
 		// Se Dibuja el Skybox
@@ -1090,7 +1075,7 @@ void applicationLoop() {
 		glDepthFunc(GL_LEQUAL);
 		skyboxSphere.render();
 		glCullFace(oldCullFaceMode);
-		glDepthFunc(oldDepthFuncMode); */
+		glDepthFunc(oldDepthFuncMode); 
 
 		dz = 0;
 		rot0 = 0;
