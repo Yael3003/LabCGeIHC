@@ -76,6 +76,7 @@ Model modelRock;
 Model modelRailRoad;
 Model modelAircraft;
 Model modelTree;
+Model modelSofa;
 
 GLuint textureID1, textureID2, textureID3, textureID4;
 GLuint skyboxTextureID;
@@ -248,6 +249,9 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 
 	modelTree.loadModel("../models/Tree/Christmas Tree.obj");
 	modelTree.setShader(&shaderMulLighting);
+
+	modelSofa.loadModel("../models/model_obj_7Q_Ab2HLll1_c7YDClm08KI/model.obj");
+	modelSofa.setShader(&shaderMulLighting);
 
 	camera->setPosition(glm::vec3(0.0, 0.0, 4.0));
 
@@ -776,6 +780,13 @@ void applicationLoop() {
 		matrixModelTree = glm::translate(matrixModelTree, glm::vec3(5.0, 0.0, 0.0));
 		matrixModelTree = glm::scale(matrixModelTree, glm::vec3(0.2, 0.2, 0.2));
 		modelTree.render(matrixModelTree);
+		//Forze to enable the unit texture to 0 always-------------------------IMPORTANT
+		glActiveTexture(GL_TEXTURE0);
+		//Esto es para el modelo Sofa
+		glm::mat4 matrixModelSofa = glm::mat4(1.0);
+		matrixModelSofa = glm::translate(matrixModelSofa, glm::vec3(5.0, 3.0, 0.0));
+		//matrixModelSofa = glm::scale(matrixModelSofa, glm::vec3(0.2, 0.2, 0.2));
+		modelSofa.render(matrixModelSofa);
 		//Forze to enable the unit texture to 0 always-------------------------IMPORTANT
 		glActiveTexture(GL_TEXTURE0);
 
