@@ -67,18 +67,26 @@ Sphere skyboxSphere(20, 20);
 Cylinder cylinder1(20, 20, 0.5, 0.5);
 Cylinder cylinder2(20, 20, 0.5, 0.5);
 Cylinder cylinderMaterials(20, 20, 0.5, 0.5);
+Cylinder pata(20, 20, 0.5, 0.5), pataSilla(20, 20, 0.5, 0.5);
 Box boxMaterials;
 Box box1;
 Box box2;
 Box box3;
+Box pared1, paredBanio, piso1, piso2, techo1;
+//Para los sofas
+Box sofabk, sofac1, sofac2, sofac3, sofac4, sofac5, sofal, sofar;
+//Para mesa y muebles 
+Box mesa, asientoSilla, respaldoSilla, mueble1Sup, mueble1Inf, muebleCocina;
 // Models complex instances
-Model modelRock; 
-Model modelRailRoad;
-Model modelAircraft;
+//Model modelRock; 
+//Model modelRailRoad;
+//Model modelAircraft;
 Model modelTree;
-Model modelSofa;
+Model modelToilet;
+//Model modelSofa;
 
-GLuint textureID1, textureID2, textureID3, textureID4;
+GLuint textureID1, textureID2, textureID3, textureID4, textureIDCocina, 
+textureIDEstufa, textureIDEstufaSup, textureIDRefri, textureIDRefriSup, textureIDAzulejos, textureIDPasto;
 GLuint skyboxTextureID;
 
 GLenum types[6] = {
@@ -89,12 +97,12 @@ GLenum types[6] = {
 	GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 	GL_TEXTURE_CUBE_MAP_NEGATIVE_Z };
 
-std::string fileNames[6] = { "../Textures/mp_bloodvalley/blood-valley_ft.tga",
-"../Textures/mp_bloodvalley/blood-valley_bk.tga",
-"../Textures/mp_bloodvalley/blood-valley_up.tga",
-"../Textures/mp_bloodvalley/blood-valley_dn.tga",
-"../Textures/mp_bloodvalley/blood-valley_rt.tga",
-"../Textures/mp_bloodvalley/blood-valley_lf.tga" };
+std::string fileNames[6] = { "../Textures/mp_perdicus/perdicus_ft.tga",
+		"../Textures/mp_perdicus/perdicus_bk.tga",
+		"../Textures/mp_perdicus/perdicus_up.tga",
+		"../Textures/mp_perdicus/perdicus_dn.tga",
+		"../Textures/mp_perdicus/perdicus_rt.tga",
+		"../Textures/mp_perdicus/perdicus_lf.tga" };
 
 bool exitApp = false;
 int lastMousePosX, offsetX = 0;
@@ -238,20 +246,109 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	box3.init();
 	box3.setShader(&shaderMulLighting);
 
-	modelRock.loadModel("../models/rock/rock.obj");
-	modelRock.setShader(&shaderMulLighting);
+	pared1.init();
+	// Settea el shader a utilizar
+	pared1.setShader(&shader);
+	pared1.setColor(glm::vec4(0.85, 0.8, 0.4, 1.0));
 
-	modelRock.loadModel("../models/railroad/railroad_track.obj");
-	modelRock.setShader(&shaderMulLighting);
+	paredBanio.init();
+	// Settea el shader a utilizar
+	paredBanio.setShader(&shaderTexture);
+	paredBanio.setColor(glm::vec4(0.85, 0.8, 0.4, 1.0));
 
-	modelAircraft.loadModel("../models/Aircraft_obj/E 45 Aircraft_obj.obj");
-	modelAircraft.setShader(&shaderMulLighting);
+	piso1.init();
+	// Settea el shader a utilizar
+	piso1.setShader(&shaderTextureLighting);
+	piso1.setColor(glm::vec4(0.3, 0.2, 0.25, 1.0));
+
+	piso2.init();
+	// Settea el shader a utilizar
+	piso2.setShader(&shaderTextureLighting);
+	piso2.setColor(glm::vec4(0.3, 0.2, 0.25, 1.0));
+
+	//sofa1
+	sofabk.init();
+	// Settea el shader a utilizar
+	sofabk.setShader(&shader);
+	sofabk.setColor(glm::vec4(0.5, 0.4, 0.2, 1.0));
+
+	sofac1.init();
+	// Settea el shader a utilizar
+	sofac1.setShader(&shader);
+	sofac1.setColor(glm::vec4(0.6, 0.5, 0.3, 1.0));
+
+	sofac2.init();
+	// Settea el shader a utilizar
+	sofac2.setShader(&shader);
+	sofac2.setColor(glm::vec4(0.65, 0.55, 0.35, 1.0));
+
+	sofac3.init();
+	// Settea el shader a utilizar
+	sofac3.setShader(&shader);
+	sofac3.setColor(glm::vec4(0.6, 0.5, 0.3, 1.0));
+
+	sofac4.init();
+	// Settea el shader a utilizar
+	sofac4.setShader(&shader);
+	sofac4.setColor(glm::vec4(0.65, 0.55, 0.35, 1.0));
+
+	sofac5.init();
+	// Settea el shader a utilizar
+	sofac5.setShader(&shader);
+	sofac5.setColor(glm::vec4(0.6, 0.5, 0.3, 1.0));
+
+	sofar.init();
+	// Settea el shader a utilizar
+	sofar.setShader(&shader);
+	sofar.setColor(glm::vec4(0.5, 0.4, 0.2, 1.0));
+	sofal.init();
+	// Settea el shader a utilizar
+	sofal.setShader(&shader);
+	sofal.setColor(glm::vec4(0.5, 0.4, 0.2, 1.0));
+
+	mesa.init();
+	// Settea el shader a utilizar
+	mesa.setShader(&shader);
+	mesa.setColor(glm::vec4(0.5, 0.4, 0.2, 1.0));
+
+	pata.init();
+	pata.setShader(&shader);
+	pata.setColor(glm::vec4(0.12, 0.1, 0.15, 1.0));
+
+	asientoSilla.init();
+	asientoSilla.setShader(&shader);
+	asientoSilla.setColor(glm::vec4(0.6, 0.5, 0.3, 1.0));
+
+	pataSilla.init();
+	pataSilla.setShader(&shader);
+	pataSilla.setColor(glm::vec4(0.12, 0.1, 0.15, 1.0));
+
+	respaldoSilla.init();
+	respaldoSilla.setShader(&shader);
+	respaldoSilla.setColor(glm::vec4(0.65, 0.55, 0.35, 1.0));
+
+	muebleCocina.init();
+	muebleCocina.setShader(&shaderTexture);
+	muebleCocina.setColor(glm::vec4(0.85, 0.75, 0.55, 1.0));
+
+
+	//modelRock.loadModel("../models/rock/rock.obj");
+	//modelRock.setShader(&shaderMulLighting);
+
+	//modelRock.loadModel("../models/railroad/railroad_track.obj");
+	//modelRock.setShader(&shaderMulLighting);
+
+	//modelAircraft.loadModel("../models/Aircraft_obj/E 45 Aircraft_obj.obj");
+	//modelAircraft.setShader(&shaderMulLighting);
 
 	modelTree.loadModel("../models/Tree/Christmas Tree.obj");
 	modelTree.setShader(&shaderMulLighting);
 
-	modelSofa.loadModel("../models/model_obj_7Q_Ab2HLll1_c7YDClm08KI/model.obj");
-	modelSofa.setShader(&shaderMulLighting);
+	modelTree.loadModel("../models/Toilet/Toilet.1.obj");
+	modelTree.setShader(&shaderMulLighting);
+
+	//modelSofa.loadModel("../models/model_obj_7Q_Ab2HLll1_c7YDClm08KI/model.obj");
+	//modelSofa.setShader(&shaderMulLighting);
 
 	camera->setPosition(glm::vec3(0.0, 0.0, 4.0));
 
@@ -259,7 +356,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	// Definimos el tamanio de la imagen
 	int imageWidth, imageHeight;
 	// Definiendo la textura a utilizar
-	Texture texture1("../Textures/sponge.jpg");
+	Texture texture1("../Textures/losetas.jpg");
 	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
 	FIBITMAP *bitmap = texture1.loadImage();
 	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
@@ -324,16 +421,16 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	texture2.freeImage(bitmap);
 
 	// Definiendo la textura a utilizar
-	Texture texture3("../Textures/goku.png");
+	Texture texture3("../Textures/muebleCocina.jpg");
 	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
 	// Voltear la imagen
 	bitmap = texture3.loadImage(true);
 	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
 	data = texture3.convertToData(bitmap, imageWidth, imageHeight);
 	// Creando la textura con id 1
-	glGenTextures(1, &textureID3);
+	glGenTextures(1, &textureIDCocina);
 	// Enlazar esa textura a una tipo de textura de 2D.
-	glBindTexture(GL_TEXTURE_2D, textureID3);
+	glBindTexture(GL_TEXTURE_2D, textureIDCocina);
 	// set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // set texture wrapping to GL_REPEAT (default wrapping method)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -357,16 +454,16 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	texture3.freeImage(bitmap);
 
 	// Definiendo la textura a utilizar
-	Texture texture4("../Textures/texturaLadrillos.jpg");
+	Texture texture4("../Textures/texturaEstufa.jpg");
 	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
 	// Voltear la imagen
-	bitmap = texture4.loadImage(true);
+	bitmap = texture4.loadImage(false);
 	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
 	data = texture4.convertToData(bitmap, imageWidth, imageHeight);
 	// Creando la textura con id 1
-	glGenTextures(1, &textureID4);
+	glGenTextures(1, &textureIDEstufa);
 	// Enlazar esa textura a una tipo de textura de 2D.
-	glBindTexture(GL_TEXTURE_2D, textureID4);
+	glBindTexture(GL_TEXTURE_2D, textureIDEstufa);
 	// set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // set texture wrapping to GL_REPEAT (default wrapping method)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -388,6 +485,171 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 		std::cout << "Failed to load texture" << std::endl;
 	// Libera la memoria de la textura
 	texture4.freeImage(bitmap);
+
+	// Definiendo la textura a utilizar
+	Texture texture5("../Textures/texturaEstufaSup.jpg");
+	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
+	// Voltear la imagen
+	bitmap = texture5.loadImage(true);
+	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
+	data = texture5.convertToData(bitmap, imageWidth, imageHeight);
+	// Creando la textura con id 1
+	glGenTextures(1, &textureIDEstufaSup);
+	// Enlazar esa textura a una tipo de textura de 2D.
+	glBindTexture(GL_TEXTURE_2D, textureIDEstufaSup);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Verifica si se pudo abrir la textura
+	if (data) {
+		// Transferis los datos de la imagen a memoria
+		// Tipo de textura, Mipmaps, Formato interno de openGL, ancho, alto, Mipmaps,
+		// Formato interno de la libreria de la imagen, el tipo de dato y al apuntador
+		// a los datos
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0,
+			GL_BGRA, GL_UNSIGNED_BYTE, data);
+		// Generan los niveles del mipmap (OpenGL es el ecargado de realizarlos)
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "Failed to load texture" << std::endl;
+	// Libera la memoria de la textura
+	texture5.freeImage(bitmap);
+
+	// Definiendo la textura a utilizar
+	Texture texture6("../Textures/texturaRefri.jpg");
+	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
+	// Voltear la imagen
+	bitmap = texture6.loadImage(false);
+	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
+	data = texture5.convertToData(bitmap, imageWidth, imageHeight);
+	// Creando la textura con id 1
+	glGenTextures(1, &textureIDRefri);
+	// Enlazar esa textura a una tipo de textura de 2D.
+	glBindTexture(GL_TEXTURE_2D, textureIDRefri);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Verifica si se pudo abrir la textura
+	if (data) {
+		// Transferis los datos de la imagen a memoria
+		// Tipo de textura, Mipmaps, Formato interno de openGL, ancho, alto, Mipmaps,
+		// Formato interno de la libreria de la imagen, el tipo de dato y al apuntador
+		// a los datos
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0,
+			GL_BGRA, GL_UNSIGNED_BYTE, data);
+		// Generan los niveles del mipmap (OpenGL es el ecargado de realizarlos)
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "Failed to load texture" << std::endl;
+	// Libera la memoria de la textura
+	texture6.freeImage(bitmap);
+
+	// Definiendo la textura a utilizar
+	Texture texture7("../Textures/metal.jpg");
+	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
+	// Voltear la imagen
+	bitmap = texture7.loadImage(true);
+	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
+	data = texture7.convertToData(bitmap, imageWidth, imageHeight);
+	// Creando la textura con id 1
+	glGenTextures(1, &textureIDRefriSup);
+	// Enlazar esa textura a una tipo de textura de 2D.
+	glBindTexture(GL_TEXTURE_2D, textureIDRefriSup);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Verifica si se pudo abrir la textura
+	if (data) {
+		// Transferis los datos de la imagen a memoria
+		// Tipo de textura, Mipmaps, Formato interno de openGL, ancho, alto, Mipmaps,
+		// Formato interno de la libreria de la imagen, el tipo de dato y al apuntador
+		// a los datos
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0,
+			GL_BGRA, GL_UNSIGNED_BYTE, data);
+		// Generan los niveles del mipmap (OpenGL es el ecargado de realizarlos)
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "Failed to load texture" << std::endl;
+	// Libera la memoria de la textura
+	texture7.freeImage(bitmap);
+
+	// Definiendo la textura a utilizar
+	Texture texture8("../Textures/azulejos.jpg");
+	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
+	// Voltear la imagen
+	bitmap = texture8.loadImage(true);
+	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
+	data = texture8.convertToData(bitmap, imageWidth, imageHeight);
+	// Creando la textura con id 1
+	glGenTextures(1, &textureIDAzulejos);
+	// Enlazar esa textura a una tipo de textura de 2D.
+	glBindTexture(GL_TEXTURE_2D, textureIDAzulejos);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Verifica si se pudo abrir la textura
+	if (data) {
+		// Transferis los datos de la imagen a memoria
+		// Tipo de textura, Mipmaps, Formato interno de openGL, ancho, alto, Mipmaps,
+		// Formato interno de la libreria de la imagen, el tipo de dato y al apuntador
+		// a los datos
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0,
+			GL_BGRA, GL_UNSIGNED_BYTE, data);
+		// Generan los niveles del mipmap (OpenGL es el ecargado de realizarlos)
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "Failed to load texture" << std::endl;
+	// Libera la memoria de la textura
+	texture8.freeImage(bitmap);
+
+	// Definiendo la textura a utilizar
+	Texture texture9("../Textures/pasto.jpg");
+	// Carga el mapa de bits (FIBITMAP es el tipo de dato de la libreria)
+	// Voltear la imagen
+	bitmap = texture9.loadImage(true);
+	// Convertimos el mapa de bits en un arreglo unidimensional de tipo unsigned char
+	data = texture9.convertToData(bitmap, imageWidth, imageHeight);
+	// Creando la textura con id 1
+	glGenTextures(1, &textureIDPasto);
+	// Enlazar esa textura a una tipo de textura de 2D.
+	glBindTexture(GL_TEXTURE_2D, textureIDPasto);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); // set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Verifica si se pudo abrir la textura
+	if (data) {
+		// Transferis los datos de la imagen a memoria
+		// Tipo de textura, Mipmaps, Formato interno de openGL, ancho, alto, Mipmaps,
+		// Formato interno de la libreria de la imagen, el tipo de dato y al apuntador
+		// a los datos
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0,
+			GL_BGRA, GL_UNSIGNED_BYTE, data);
+		// Generan los niveles del mipmap (OpenGL es el ecargado de realizarlos)
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "Failed to load texture" << std::endl;
+	// Libera la memoria de la textura
+	texture9.freeImage(bitmap);
 
 	// Carga de texturas para el skybox
 	Texture skyboxTexture = Texture("");
@@ -648,7 +910,614 @@ void applicationLoop() {
 					* glm::vec4(0.0, 0.0, 0.0, 1.0))));
 		sphereLamp.render(lightModelmatrix);
 
-		model = glm::translate(model, glm::vec3(0, 0, dz));
+		glm::mat4 piso = glm::mat4(1.0f);
+		piso = glm::translate(piso, glm::vec3(0, 0, 0));
+		//piso = glm::rotate(piso, glm::radians(90.0f), glm::vec3(1.0, 0, 0.0));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureID1);
+		piso1.render(glm::scale(piso, glm::vec3(20.0, 0.1, 10)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pasto = glm::mat4(1.0f);
+		pasto = glm::translate(piso, glm::vec3(0, 0, 10));
+		// Usamos la textura ID 
+		glBindTexture(GL_TEXTURE_2D, textureIDPasto);
+		piso2.render(glm::scale(pasto, glm::vec3(20.0, 0.1, 10)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredT = glm::translate(piso, glm::vec3(0, 2.55, -4.95));
+		paredT = glm::rotate(paredT, rot0, glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredT, glm::vec3(20.0, 5, 0.1)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredCen = glm::translate(piso, glm::vec3(0, 2.55, -1.25));
+		//paredCen = glm::rotate(paredCen, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredCen, glm::vec3(0.1, 5, 2.5)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredIzq = glm::mat4(1.0f);
+		paredIzq = glm::translate(piso, glm::vec3(-9.95, 2.55, 0));
+		//paredIzq = glm::rotate(paredIzq, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredIzq, glm::vec3(0.1, 5, 10)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredDer = glm::mat4(1.0f);
+		paredDer = glm::translate(piso, glm::vec3(9.95, 2.55, 0));
+		//paredDer = glm::rotate(paredDer, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredDer, glm::vec3(0.1, 5, 10)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredFrenteComedor = glm::mat4(1.0f);
+		paredFrenteComedor = glm::translate(piso, glm::vec3(6.25, 2.55, 0));
+		//paredDer = glm::rotate(paredDer, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredFrenteComedor, glm::vec3(7.5, 5, 0.1)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredFrenteSala = glm::mat4(1.0f);
+		paredFrenteSala = glm::translate(piso, glm::vec3(-6.25, 2.55, 1.2));
+		//paredDer = glm::rotate(paredDer, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredFrenteSala, glm::vec3(7.5, 5, 0.1)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredFrenteCocina = glm::mat4(1.0f);
+		paredFrenteCocina = glm::translate(piso, glm::vec3(6.25, 2.55, 4.95));
+		//paredDer = glm::rotate(paredDer, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredFrenteCocina, glm::vec3(7.5, 5, 0.1)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		glm::mat4 paredFrenteBanio = glm::mat4(1.0f);
+		paredFrenteBanio = glm::translate(piso, glm::vec3(-6.25, 2.55, 4.95));
+		//paredDer = glm::rotate(paredDer, glm::radians(90.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pared1.render(glm::scale(paredFrenteBanio, glm::vec3(7.5, 5, 0.1)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredFrenteBanioTx = glm::mat4(1.0f);
+		paredFrenteBanioTx = glm::translate(paredFrenteBanio, glm::vec3(0, 0, -0.05));
+		// Usamos la textura ID 
+		glBindTexture(GL_TEXTURE_2D, textureIDAzulejos);
+		paredBanio.render(glm::scale(paredFrenteBanioTx, glm::vec3(7.5, 5, 0.001)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 paredTraBanioTx = glm::mat4(1.0f);
+		paredTraBanioTx = glm::translate(paredFrenteSala, glm::vec3(0, 0, 0.05));
+		// Usamos la textura ID 
+		glBindTexture(GL_TEXTURE_2D, textureIDAzulejos);
+		paredBanio.render(glm::scale(paredTraBanioTx, glm::vec3(7.5, 5, 0.001)));
+		//Descomentar
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaTras = glm::translate(piso, glm::vec3(-5, 1.05, -4.7));
+		//sofaTras = glm::rotate(sofaTras, rot0, glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofabk.render(glm::scale(sofaTras, glm::vec3(3.0, 2.0, 0.05)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaIzq = glm::translate(sofaTras, glm::vec3(-1.5, -0.3, 0.5));
+		//sofaIzq = glm::rotate(sofaIzq, glm::radians(90.0f), glm::vec3(0.0, 1.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofal.render(glm::scale(sofaIzq, glm::vec3(0.05, 1.4, 1.0)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaDer = glm::translate(sofaTras, glm::vec3(1.5, -0.3, 0.5));
+		//sofaDer = glm::rotate(sofaDer, glm::radians(90.0f), glm::vec3(0.0, 1.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofar.render(glm::scale(sofaDer, glm::vec3(0.05, 1.4, 1.0)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaCojin1 = glm::translate(sofaTras, glm::vec3(0.0, -0.7, 0.625));
+		//sofaCojin1 = glm::rotate(sofaCojin1, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac1.render(glm::scale(sofaCojin1, glm::vec3(2.9, 0.4, 1.2)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaCojin2 = glm::translate(sofaTras, glm::vec3(0.0, -0.3, 0.625));
+		//sofaCojin2 = glm::rotate(sofaCojin2, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac2.render(glm::scale(sofaCojin2, glm::vec3(2.9, 0.4, 1.2)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaCojin3 = glm::translate(sofaTras, glm::vec3(-0.95, 0.4, 0.1));
+		//sofaCojin3 = glm::rotate(sofaCojin3, glm::radians(0.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac3.render(glm::scale(sofaCojin3, glm::vec3(0.9, 1, 0.25)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaCojin4 = glm::translate(sofaTras, glm::vec3(0, 0.4, 0.1));
+		//sofaCojin4 = glm::rotate(sofaCojin4, glm::radians(0.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac4.render(glm::scale(sofaCojin4, glm::vec3(0.9, 1, 0.25)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofaCojin5 = glm::translate(sofaTras, glm::vec3(0.95, 0.4, 0.1));
+		//sofaCojin5 = glm::rotate(sofaCojin5, glm::radians(0.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac5.render(glm::scale(sofaCojin5, glm::vec3(0.9, 1, 0.25)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		//Segundo sofa--------------------------------------------------------
+
+		glm::mat4 sofa2Tras = glm::translate(piso, glm::vec3(-5, 1.05, 1));
+		sofa2Tras = glm::rotate(sofa2Tras, glm::radians(180.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofabk.render(glm::scale(sofa2Tras, glm::vec3(2.0, 2.0, 0.05)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa2Izq = glm::translate(sofa2Tras, glm::vec3(-1, -0.3, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofal.render(glm::scale(sofa2Izq, glm::vec3(0.05, 1.4, 1.0)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa2Der = glm::translate(sofa2Tras, glm::vec3(1, -0.3, 0.5));
+		//sofaDer = glm::rotate(sofaDer, glm::radians(90.0f), glm::vec3(0.0, 1.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofar.render(glm::scale(sofa2Der, glm::vec3(0.05, 1.4, 1.0)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa2Cojin1 = glm::translate(sofa2Tras, glm::vec3(0.0, -0.7, 0.625));
+		//sofaCojin1 = glm::rotate(sofaCojin1, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac1.render(glm::scale(sofa2Cojin1, glm::vec3(1.9, 0.4, 1.2)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa2Cojin2 = glm::translate(sofa2Tras, glm::vec3(0.0, -0.3, 0.625));
+		//sofaCojin2 = glm::rotate(sofaCojin2, glm::radians(90.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac2.render(glm::scale(sofa2Cojin2, glm::vec3(1.9, 0.4, 1.2)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa2Cojin3 = glm::translate(sofa2Tras, glm::vec3(-0.45, 0.4, 0.15));
+		//sofaCojin3 = glm::rotate(sofaCojin3, glm::radians(0.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac3.render(glm::scale(sofa2Cojin3, glm::vec3(0.9, 1, 0.25)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa2Cojin4 = glm::translate(sofa2Tras, glm::vec3(0.45, 0.4, 0.15));
+		//sofaCojin4 = glm::rotate(sofaCojin4, glm::radians(0.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac4.render(glm::scale(sofa2Cojin4, glm::vec3(0.9, 1, 0.25)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		//----------------Tercer sofa-------------------------------------------
+
+		glm::mat4 sofa3Tras = glm::translate(piso, glm::vec3(-1.2, 1.05, -1.5));
+		sofa3Tras = glm::rotate(sofa3Tras, glm::radians(270.0f), glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofabk.render(glm::scale(sofa3Tras, glm::vec3(1, 2, 0.05)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa3Izq = glm::translate(sofa3Tras, glm::vec3(-0.5, -0.3, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofal.render(glm::scale(sofa3Izq, glm::vec3(0.05, 1.4, 1.0)));
+		// No utilizar ninguna textura             
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa3Der = glm::translate(sofa3Tras, glm::vec3(0.5, -0.3, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofar.render(glm::scale(sofa3Der, glm::vec3(0.05, 1.4, 1.0)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa3Cojin1 = glm::translate(sofa3Tras, glm::vec3(0.0, -0.3, 0.625));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac1.render(glm::scale(sofa3Cojin1, glm::vec3(0.9, 0.4, 1.2)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa3Cojin2 = glm::translate(sofa3Tras, glm::vec3(0.0, -0.7, 0.625));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac2.render(glm::scale(sofa3Cojin2, glm::vec3(0.9, 0.4, 1.2)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 sofa3Cojin3 = glm::translate(sofa3Tras, glm::vec3(0, 0.4, 0.125));
+		//sofaCojin4 = glm::rotate(sofaCojin4, glm::radians(0.0f), glm::vec3(1.0, 0.0, 0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		sofac4.render(glm::scale(sofa3Cojin3, glm::vec3(0.9, 1, 0.25)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		//--------------------------------------MESA-------------------------------------------------
+
+		glm::mat4 mesa1 = glm::translate(piso, glm::vec3(5, 1.5, -2.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		mesa.render(glm::scale(mesa1, glm::vec3(3, 0.08, 1.5)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata1 = glm::translate(mesa1, glm::vec3(-1.45, -0.75, -0.7));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pata.render(glm::scale(pata1, glm::vec3(0.15, 1.42, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata2 = glm::translate(mesa1, glm::vec3(-1.45, -0.75, 0.7));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pata.render(glm::scale(pata2, glm::vec3(0.15, 1.42, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata3 = glm::translate(mesa1, glm::vec3(1.45, -0.75, -0.7));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pata.render(glm::scale(pata3, glm::vec3(0.15, 1.42, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata4 = glm::translate(mesa1, glm::vec3(1.45, -0.75, 0.7));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pata.render(glm::scale(pata4, glm::vec3(0.15, 1.42, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		//-----------------------------------SILLAS---------------------------------------------
+
+		glm::mat4 asientoSilla1 = glm::translate(mesa1, glm::vec3(0.75, -0.6, -1.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		asientoSilla.render(glm::scale(asientoSilla1, glm::vec3(1, 0.1, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata1Silla1 = glm::translate(asientoSilla1, glm::vec3(0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata1Silla1, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata2Silla1 = glm::translate(asientoSilla1, glm::vec3(-0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata2Silla1, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata3Silla1 = glm::translate(asientoSilla1, glm::vec3(0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata3Silla1, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata4Silla1 = glm::translate(asientoSilla1, glm::vec3(-0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata4Silla1, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 respaldoSilla1 = glm::translate(asientoSilla1, glm::vec3(0.0, 0.675, -0.45));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		respaldoSilla.render(glm::scale(respaldoSilla1, glm::vec3(1, 1.25, 0.075)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 asientoSilla2 = glm::translate(mesa1, glm::vec3(-0.75, -0.6, -1.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		asientoSilla.render(glm::scale(asientoSilla2, glm::vec3(1, 0.1, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata1Silla2 = glm::translate(asientoSilla2, glm::vec3(0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata1Silla2, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata2Silla2 = glm::translate(asientoSilla2, glm::vec3(-0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata2Silla2, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata3Silla2 = glm::translate(asientoSilla2, glm::vec3(0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata3Silla2, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata4Silla2 = glm::translate(asientoSilla2, glm::vec3(-0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata4Silla2, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 respaldoSilla2 = glm::translate(asientoSilla2, glm::vec3(0.0, 0.675, -0.45));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		respaldoSilla.render(glm::scale(respaldoSilla2, glm::vec3(1, 1.25, 0.075)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		glm::mat4 asientoSilla3 = glm::translate(mesa1, glm::vec3(0.75, -0.6, 1.5));
+		asientoSilla3 = glm::rotate(asientoSilla3, glm::radians(180.0f), glm::vec3(0, 1.0, 0.0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		asientoSilla.render(glm::scale(asientoSilla3, glm::vec3(1, 0.1, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata1Silla3 = glm::translate(asientoSilla3, glm::vec3(0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata1Silla3, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata2Silla3 = glm::translate(asientoSilla3, glm::vec3(-0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata2Silla3, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata3Silla3 = glm::translate(asientoSilla3, glm::vec3(0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata3Silla3, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata4Silla3 = glm::translate(asientoSilla3, glm::vec3(-0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata4Silla3, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 respaldoSilla3 = glm::translate(asientoSilla3, glm::vec3(0.0, 0.675, -0.45));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		respaldoSilla.render(glm::scale(respaldoSilla3, glm::vec3(1, 1.25, 0.075)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		glm::mat4 asientoSilla4 = glm::translate(mesa1, glm::vec3(-0.75, -0.6, 1.5));
+		asientoSilla4 = glm::rotate(asientoSilla4, glm::radians(180.0f), glm::vec3(0, 1.0, 0.0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		asientoSilla.render(glm::scale(asientoSilla4, glm::vec3(1, 0.1, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata1Silla4 = glm::translate(asientoSilla4, glm::vec3(0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata1Silla4, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata2Silla4 = glm::translate(asientoSilla4, glm::vec3(-0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata2Silla4, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata3Silla4 = glm::translate(asientoSilla4, glm::vec3(0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata3Silla4, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata4Silla4 = glm::translate(asientoSilla4, glm::vec3(-0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata4Silla4, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 respaldoSilla4 = glm::translate(asientoSilla4, glm::vec3(0.0, 0.675, -0.45));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		respaldoSilla.render(glm::scale(respaldoSilla4, glm::vec3(1, 1.25, 0.075)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		glm::mat4 asientoSilla5 = glm::translate(mesa1, glm::vec3(2.2, -0.6, 0));
+		asientoSilla5 = glm::rotate(asientoSilla5, glm::radians(270.0f), glm::vec3(0, 1.0, 0.0));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		asientoSilla.render(glm::scale(asientoSilla5, glm::vec3(1, 0.1, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata1Silla5 = glm::translate(asientoSilla5, glm::vec3(0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata1Silla5, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata2Silla5 = glm::translate(asientoSilla5, glm::vec3(-0.5, -0.45, 0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata2Silla5, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata3Silla5 = glm::translate(asientoSilla5, glm::vec3(0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata3Silla5, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 pata4Silla5 = glm::translate(asientoSilla5, glm::vec3(-0.5, -0.45, -0.5));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		pataSilla.render(glm::scale(pata4Silla5, glm::vec3(0.15, 0.85, 0.15)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 respaldoSilla5 = glm::translate(asientoSilla5, glm::vec3(0.0, 0.675, -0.45));
+		// Usamos la textura ID 1
+		//glBindTexture(GL_TEXTURE_2D, textureID1);
+		respaldoSilla.render(glm::scale(respaldoSilla5, glm::vec3(1, 1.25, 0.075)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		//------------------------------------------Cocina-------------------------------------------
+		
+		glm::mat4 muebleCocina1 = glm::translate(paredFrenteComedor, glm::vec3(-2, -1.5, 0.6));
+		muebleCocina1 = glm::rotate(muebleCocina1, glm::radians(180.0f), glm::vec3(0, 1.0, 0.0));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDCocina);
+		muebleCocina.render(glm::scale(muebleCocina1, glm::vec3(3, 2, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 estufa = glm::translate(paredFrenteComedor, glm::vec3(0.5, -1.5, 0.6));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDEstufa);
+		muebleCocina.render(glm::scale(estufa, glm::vec3(2, 2, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 estufaSup = glm::translate(estufa, glm::vec3(0, 1, 0));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDEstufaSup);
+		muebleCocina.render(glm::scale(estufaSup, glm::vec3(2, 0.01, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 muebleCocina2 = glm::translate(paredFrenteComedor, glm::vec3(2.5, -1.5, 0.6));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDCocina);
+		muebleCocina.render(glm::scale(muebleCocina2, glm::vec3(2, 2, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 muebleCocina3 = glm::translate(paredFrenteComedor, glm::vec3(-1, -1.5, 4.4));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDCocina);
+		muebleCocina.render(glm::scale(muebleCocina3, glm::vec3(3, 2, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 refrigerador= glm::translate(paredFrenteComedor, glm::vec3(1.5, -0.5, 4.4));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDRefri);
+		muebleCocina.render(glm::scale(refrigerador, glm::vec3(2, 4, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 refrigeradorSup = glm::translate(refrigerador, glm::vec3(0, 2, 0));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDRefriSup);
+		muebleCocina.render(glm::scale(refrigeradorSup, glm::vec3(2, 0.01, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 refrigeradorDer = glm::translate(refrigerador, glm::vec3(1, 0, 0));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDRefriSup);
+		muebleCocina.render(glm::scale(refrigeradorDer, glm::vec3(0.01, 4, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glm::mat4 refrigeradorIzq = glm::translate(refrigerador, glm::vec3(-1, 0, 0));
+		// Usamos la textura ID 1
+		glBindTexture(GL_TEXTURE_2D, textureIDRefriSup);
+		muebleCocina.render(glm::scale(refrigeradorIzq, glm::vec3(0.01, 4, 1)));
+		// No utilizar ninguna textura
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+
+		/*model = glm::translate(model, glm::vec3(0, 0, dz));
 		model = glm::rotate(model, rot0, glm::vec3(0, 1, 0));
 		//box1.enableWireMode();
 		// Usamos la textura ID 1
@@ -713,7 +1582,7 @@ void applicationLoop() {
 		modelCylinder = glm::translate(modelCylinder,
 			glm::vec3(-3.0, 0.0, 0.0));
 		// Envolvente desde el indice 0, el tamanio es 20 * 20 * 6
-		// Se usa la textura 1 ( Bon sponja)
+		// Se usa la textura 1 ( Bob sponja)
 		glBindTexture(GL_TEXTURE_2D, textureID1);
 		cylinder2.render(0, cylinder2.getSlices() * cylinder2.getStacks() * 6,
 			modelCylinder);
@@ -732,7 +1601,7 @@ void applicationLoop() {
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Render del cubo con textura de ladrillos y con repeticion en x
-		glm::mat4 cubeTextureModel = glm::mat4(1.0);
+		/*glm::mat4 cubeTextureModel = glm::mat4(1.0);
 		cubeTextureModel = glm::translate(cubeTextureModel,
 			glm::vec3(3.0, 2.0, 3.0));
 		glBindTexture(GL_TEXTURE_2D, textureID4);
@@ -750,7 +1619,7 @@ void applicationLoop() {
 		shaderMaterialLighting.setFloat("material.shininess", 76.8f);
 		cylinderMaterials.render(cylinderMaterialModel);
 
-		glm::mat4 boxMaterialModel = glm::mat4(1.0f);
+		/*glm::mat4 boxMaterialModel = glm::mat4(1.0f);
 		boxMaterialModel = glm::translate(boxMaterialModel, glm::vec3(-3.0, 2.0, -3.0));
 		shaderMaterialLighting.setVectorFloat3("material.ambient", glm::value_ptr(glm::vec3(0.61424f, 0.04136f, 0.04136f)));
 		shaderMaterialLighting.setVectorFloat3("material.diffuse", glm::value_ptr(glm::vec3(0.61424f, 0.04136f, 0.04136f)));
@@ -774,26 +1643,33 @@ void applicationLoop() {
 		matrixModelAircraft = glm::translate(matrixModelAircraft, glm::vec3(3.0, 0.0, 0.0));
 		modelAircraft.render(matrixModelAircraft);
 		//Forze to enable the unit texture to 0 always-------------------------IMPORTANT
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);*/
 		//Esto es para el modelo Tree
 		glm::mat4 matrixModelTree = glm::mat4(1.0);
-		matrixModelTree = glm::translate(matrixModelTree, glm::vec3(5.0, 0.0, 0.0));
+		matrixModelTree = glm::translate(matrixModelTree, glm::vec3(5.0, 0.05, 11));
 		matrixModelTree = glm::scale(matrixModelTree, glm::vec3(0.2, 0.2, 0.2));
 		modelTree.render(matrixModelTree);
 		//Forze to enable the unit texture to 0 always-------------------------IMPORTANT
 		glActiveTexture(GL_TEXTURE0);
-		//Esto es para el modelo Sofa
+
+		glm::mat4 matrixModelToilet = glm::mat4(1.0);
+		matrixModelToilet = glm::translate(matrixModelToilet, glm::vec3(-8.5, 0.05, 2.5));
+		modelToilet.render(matrixModelToilet);
+
+		//Forze to enable the unit texture to 0 always-------------------------IMPORTANT
+		glActiveTexture(GL_TEXTURE0);
+		/*Esto es para el modelo Sofa
 		glm::mat4 matrixModelSofa = glm::mat4(1.0);
 		matrixModelSofa = glm::translate(matrixModelSofa, glm::vec3(5.0, 3.0, 0.0));
 		//matrixModelSofa = glm::scale(matrixModelSofa, glm::vec3(0.2, 0.2, 0.2));
 		modelSofa.render(matrixModelSofa);
 		//Forze to enable the unit texture to 0 always-------------------------IMPORTANT
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);*/
 
 		if (angle > 2 * M_PI)
 			angle = 0.0;
 		else
-			angle += 0.0001;
+			angle += 0.001;
 
 		// Se Dibuja el Skybox
 		GLint oldCullFaceMode;
